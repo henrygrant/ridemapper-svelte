@@ -11,13 +11,13 @@
 					<img src={user.strava_profile_pic_url} alt="avatar" />
 				</div>
 				<div class="links">
-					<a href="https://www.strava.com/athletes/${user.strava_id}" target="_blank">
+					<a href="https://www.strava.com/athletes/{user.strava_id}" target="_blank">
 						<h2 class="name">
 							{user.strava_firstname}
 							{user.strava_lastname}
 						</h2>
 					</a>
-					<a href="https://www.strava.com/athletes/${user.strava_id}" target="_blank">View Map</a>
+					<a href="/map/{user.user_id}">View Map</a>
 				</div>
 			</div>
 		{/each}

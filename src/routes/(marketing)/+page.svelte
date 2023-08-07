@@ -12,7 +12,7 @@
 	<h1>RideMapper</h1>
 	<a href="/signin">Sign in</a>
 	<p>or</p>
-	<a href="/signup">Sign in</a>
+	<a href="/signup">Sign up</a>
 </section>
 
 <style>

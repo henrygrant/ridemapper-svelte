@@ -6,15 +6,7 @@
 	$: ({ user, userMeta, activities } = data);
 </script>
 
-{#if !userMeta.strava_id}
-	<div class="strava-athlete-card">
-		<a
-			href={`http://www.strava.com/oauth/authorize?client_id=${PUBLIC_STRAVA_CLIENT_ID}&response_type=code&redirect_uri=${$page.url.origin}/exchangestravatoken&approval_prompt=force&scope=read,activity:read`}
-		>
-			<h2 class="strava-athlete-card-title">Connect Strava</h2>
-		</a>
-	</div>
-{:else}
+{#if userMeta && userMeta.strava_id}
 	<div class="strava-athlete-card">
 		<div class="strava-athlete-card-avatar">
 			<img src={userMeta.strava_profile_pic_url} alt="avatar" />
@@ -46,6 +38,17 @@
 			{/each}
 		{/if}
 	</div>
+{:else}
+	<div class="connect-container">
+		<a
+			href={`http://www.strava.com/oauth/authorize?client_id=${PUBLIC_STRAVA_CLIENT_ID}&response_type=code&redirect_uri=${$page.url.origin}/exchangestravatoken&approval_prompt=force&scope=read,activity:read`}
+		>
+			<h2 class="strava-athlete-card-title">Connect Strava</h2>
+		</a>
+		<div class="auth-controls">
+			<form action="/signout" method="POST"><button>Signout</button></form>
+		</div>
+	</div>
 {/if}
 
 <style>
@@ -53,6 +56,15 @@
 		display: flex;
 		justify-content: center;
 		margin-top: 1rem;
+	}
+
+	.connect-container {
+		height: 100%;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		flex-direction: column;
+		gap: 2rem;
 	}
 
 	.strava-athlete-card {

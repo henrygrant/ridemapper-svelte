@@ -28,12 +28,12 @@ export const actions = {
 
 		throw redirect(303, '/dashboard');
 	},
-	resetpassword: async ({ request, locals: { supabase } }) => {
+	resetpassword: async ({ request, locals: { supabase }, url }) => {
 		const formData = await request.formData();
 		const email = formData.get('email') as string;
-
-		const { data, error } = await supabase.auth.resetPasswordForEmail({
-			email
+		console.log(email);
+		const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
+			redirectTo: `${url.origin}/updatepassword`
 		});
 
 		if (error) {
@@ -48,6 +48,7 @@ export const actions = {
 				email
 			});
 		}
-		return data;
+		throw redirect(303, '/checkyouremail');
+		// return data;
 	}
 };
