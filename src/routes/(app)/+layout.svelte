@@ -42,13 +42,6 @@
 		background-color: var(--lighter);
 	}
 
-	header {
-		padding: 1.5rem;
-		position: absolute;
-		z-index: 2;
-		right: 0;
-	}
-
 	main {
 		flex: 1;
 		display: flex;

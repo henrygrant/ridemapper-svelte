@@ -13,7 +13,8 @@
 		"test:integration": "playwright test",
 		"test:unit": "vitest",
 		"sb:types": "npx supabase gen types typescript --project-id qiqvioeaamgftzxpyrma > database.types.ts",
-		"sk:sync": "npx svelte-kit sync"
+		"sk:sync": "npx svelte-kit sync",
+		"gc:deploy": "gcloud app deploy --project henry-primary build/app.yaml"
 	},
 	"devDependencies": {
 		"@fontsource/fira-mono": "^4.5.10",

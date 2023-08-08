@@ -1,8 +1,5 @@
 <script lang="ts">
 	import { page } from '$app/stores';
-	import github from '$lib/images/github.svg';
-
-	export let isAuthenticated: boolean;
 </script>
 
 <header>

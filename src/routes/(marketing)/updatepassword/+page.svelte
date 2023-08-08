@@ -1,7 +1,6 @@
 <!-- // src/routes/signin/+page.svelte -->
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	export let form;
 </script>
 
 <div class="container">
