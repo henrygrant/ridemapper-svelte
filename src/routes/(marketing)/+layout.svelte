@@ -23,7 +23,7 @@
 </script>
 
 <div class="app">
-	<Header isAuthenticated={!!session} />
+	<Header />
 
 	<main>
 		<slot />
