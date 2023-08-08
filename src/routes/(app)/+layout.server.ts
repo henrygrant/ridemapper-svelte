@@ -12,7 +12,7 @@ export const load = async ({ locals: { getSession, supabase }, fetch }) => {
 		.from('user_meta')
 		.select('*')
 		.eq('user_id', session.user.id);
-	if (userMeta.strava_access_token && userMeta.strava_refresh_token) {
+	if (userMeta[0].strava_access_token && userMeta[0].strava_refresh_token) {
 		try {
 			const refreshResp = await fetch('https://www.strava.com/api/v3/oauth/token', {
 				method: 'POST',
@@ -33,6 +33,9 @@ export const load = async ({ locals: { getSession, supabase }, fetch }) => {
 					Authorization: `Bearer ${userMeta[0].strava_access_token}`
 				}
 			});
+			const shouldUpdateRides =
+				!userMeta[0].strava_activities_updated_at ||
+				Math.abs(new Date().getTime() - userMeta[0].strava_activities_updated_at) > 7200000;
 			const athlete = await athleteResp.json();
 			const { data: userMetaUpsertData, error: userMetaUpsertError } = await supabase
 				.from('user_meta')
@@ -45,12 +48,11 @@ export const load = async ({ locals: { getSession, supabase }, fetch }) => {
 					strava_access_token: refreshJson.access_token,
 					strava_refresh_token: refreshJson.refresh_token,
 					strava_token_expires_at: refreshJson.expires_at,
-					strava_token_expires_in: refreshJson.expires_in
+					strava_token_expires_in: refreshJson.expires_in,
+					strava_activities_updated_at: Date.now()
 				})
 				.select();
 			if (userMetaUpsertError) throw userMetaUpsertError;
-			const shouldUpdateRides =
-				Math.abs(new Date().getTime() - new Date(userMeta.updated_at).getTime()) > 7200000;
 			if (shouldUpdateRides) {
 				const activities: any[] = [];
 				let page = 1;
