@@ -41,6 +41,7 @@
 		padding: 1rem;
 		gap: 1rem;
 		margin-bottom: 2rem;
+		background-color: var(--light);
 	}
 
 	.links {

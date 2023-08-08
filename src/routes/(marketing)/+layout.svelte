@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Header from './Header.svelte';
+	// import Header from './Header.svelte';
 	import '../styles.css';
 	import { invalidate } from '$app/navigation';
 	import { onMount } from 'svelte';
@@ -23,7 +23,7 @@
 </script>
 
 <div class="app">
-	<Header />
+	<!-- <Header /> -->
 
 	<main>
 		<slot />

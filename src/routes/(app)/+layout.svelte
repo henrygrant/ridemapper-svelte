@@ -38,7 +38,7 @@
 		display: flex;
 		flex-direction: column;
 		height: 100%;
-		background-color: var(--lighter);
+		background-color: var(--dark);
 	}
 
 	main {
@@ -61,6 +61,7 @@
 		-webkit-box-shadow: 0px 2px 15px 0px rgba(0, 0, 0, 0.5);
 		-moz-box-shadow: 0px 2px 15px 0px rgba(0, 0, 0, 0.5);
 		box-shadow: 0px 2px 15px 0px rgba(0, 0, 0, 0.5);
+		z-index: 2;
 	}
 
 	.navitem {
@@ -70,6 +71,8 @@
 		background-color: var(--light);
 		color: var(--darker);
 		border-top: 1px solid var(--darker);
+		text-decoration: none;
+		font-size: 1.5rem;
 	}
 	.navitem:hover {
 		background-color: var(--dark);

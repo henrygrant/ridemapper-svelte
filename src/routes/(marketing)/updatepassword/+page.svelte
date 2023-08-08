@@ -1,10 +1,14 @@
 <!-- // src/routes/signin/+page.svelte -->
 <script lang="ts">
 	import { enhance } from '$app/forms';
+	export let form;
 </script>
 
 <div class="container">
 	<form method="post" use:enhance>
+		{#if form?.error}
+			<span class="">{form.error}</span>
+		{/if}
 		<input type="password" name="password" placeholder="new password" />
 		<button>Update</button>
 	</form>

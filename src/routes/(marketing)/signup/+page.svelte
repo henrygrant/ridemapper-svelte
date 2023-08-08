@@ -6,6 +6,9 @@
 
 <div class="container">
 	<form method="post" action="?/signup" use:enhance>
+		{#if form?.error}
+			<span class="">{form.error}</span>
+		{/if}
 		<input name="email" value={form?.email ?? ''} placeholder="email" />
 		<input type="password" name="password" placeholder="password" />
 		<button type="submit">Sign up</button>

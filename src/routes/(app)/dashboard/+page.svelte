@@ -11,13 +11,13 @@
 		<div class="strava-athlete-card-avatar">
 			<img src={userMeta.strava_profile_pic_url} alt="avatar" />
 		</div>
-		<a href="https://www.strava.com/athletes/${userMeta.strava_id}" target="_blank">
+		<a href="https://www.strava.com/athletes/{userMeta.strava_id}" target="_blank">
 			<h2 class="strava-athlete-card-title">
 				{userMeta.strava_firstname}
 				{userMeta.strava_lastname}
 			</h2>
 		</a>
-		<p class="strava-athlete-card-id">Strava ID: ${userMeta.strava_id}</p>
+		<p class="strava-athlete-card-id">Strava ID: {userMeta.strava_id}</p>
 	</div>
 	<div class="auth-controls">
 		<form action="/signout" method="POST"><button>Signout</button></form>
@@ -26,7 +26,7 @@
 		{#if activities && activities.length}
 			{#each activities as activity}
 				<div class="strava-activity-card">
-					<a href="https://strava.com/activities/${activity.id}" target="_blank">
+					<a href="https://strava.com/activities/{activity.id}" target="_blank">
 						<h3>{activity.name}</h3>
 					</a>
 					<div>{activity.type} on {new Date(activity.start_date).toLocaleDateString('en-US')}</div>

@@ -6,11 +6,14 @@
 
 <div class="container">
 	<form method="post" action="?/signin" use:enhance>
+		{#if form?.error}
+			<span class="">{form.error}</span>
+		{/if}
 		<input name="email" value={form?.email ?? ''} placeholder="email" />
 		<input type="password" name="password" placeholder="password" />
 		<button>Sign in</button>
 		<a href="/signup">Sign up instead</a>
-		<button class="look-like-anchor" formaction="?/resetpassword">Reset Password</button>
+		<button class="look-like-anchor" formaction="?/resetpassword">Reset password</button>
 	</form>
 </div>
 

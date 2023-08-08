@@ -10,6 +10,10 @@ export const actions = {
 			password: password as string
 		});
 
+		if (error) {
+			return fail(400, { error: 'Error' });
+		}
+
 		throw redirect(303, '/');
 	}
 };

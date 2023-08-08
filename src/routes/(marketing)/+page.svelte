@@ -10,9 +10,9 @@
 
 <section>
 	<h1>RideMapper</h1>
-	<a href="/signin">Sign in</a>
+	<a href="/signin"><button>Sign in</button></a>
 	<p>or</p>
-	<a href="/signup">Sign up</a>
+	<a href="/signup"><button>Sign up</button></a>
 </section>
 
 <style>
