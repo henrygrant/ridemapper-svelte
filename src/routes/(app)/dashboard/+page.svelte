@@ -43,7 +43,7 @@
 		<a
 			href={`http://www.strava.com/oauth/authorize?client_id=${PUBLIC_STRAVA_CLIENT_ID}&response_type=code&redirect_uri=${$page.url.origin}/exchangestravatoken&approval_prompt=force&scope=read,activity:read`}
 		>
-			<h2 class="athlete-card-title">Connect Strava</h2>
+			<button>Connect Strava</button>
 		</a>
 		<div class="auth-controls">
 			<form action="/signout" method="POST"><button>Signout</button></form>

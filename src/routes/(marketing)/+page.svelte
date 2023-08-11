@@ -21,7 +21,7 @@
 
 <style>
 	section {
-		height: 100vh;
+		height: 100%;
 		overflow: hidden;
 		display: flex;
 		flex-direction: column;
@@ -36,7 +36,6 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		mix-blend-mode: screen;
 	}
 
 	.wrapper span {

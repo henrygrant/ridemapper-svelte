@@ -30,7 +30,7 @@
 	</main>
 
 	<footer>
-		<p>created by Henry Grant</p>
+		<p>created by <a href="http://henrygrant.dev" target="_blank">Henry Grant</a></p>
 	</footer>
 </div>
 

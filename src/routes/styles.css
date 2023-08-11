@@ -31,7 +31,7 @@ body {
 	height: 100vh;
 	max-height: -webkit-fill-available;
 	margin: 0;
-	background-color: var(--white);
+	background-color: var(--lighter);
 }
 
 img {
@@ -109,6 +109,10 @@ summary,
 	cursor: pointer;
 }
 
+input:focus {
+	outline: 1px solid black;
+}
+
 input,
 button {
 	border: 2px solid black;
@@ -116,6 +120,21 @@ button {
 	background-color: var(--light);
 	color: black;
 	font-weight: bold;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+	/* border: 1px solid green; */
+	/* -webkit-text-fill-color: var(--dark); */
+	-webkit-box-shadow: 0 0 0px 1000px var(--light) inset;
+	/* transition: background-color 5000s ease-in-out 0s; */
 }
 
 .error {

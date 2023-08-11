@@ -9,17 +9,16 @@ export const load = async ({ locals: { getSession, supabase } }) => {
 	}
 
 	const bigUpdatePromise = async () => {
-		const { data: userMetaResp, error } = await supabase
+		const { data: userMeta, error } = await supabase
 			.from('user_meta')
 			.select('*')
-			.eq('user_id', session.user.id);
+			.eq('user_id', session.user.id)
+			.single();
 		if (error) {
-			console.error(error);
-			throw new Error('Failed to get user metadata from database');
+			return; // user hasn't connected strava/made a userMeta yet
 		}
-		const userMeta = userMetaResp[0];
 
-		if (userMeta.strava_access_token && userMeta.strava_refresh_token) {
+		if (userMeta && userMeta.strava_access_token && userMeta.strava_refresh_token) {
 			const updatedStravaTokenInfo = await refreshStravaToken(userMeta.strava_refresh_token);
 
 			if (updatedStravaTokenInfo) {
