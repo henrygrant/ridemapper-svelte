@@ -18,7 +18,7 @@ export const load = async ({ parent }) => {
 		map_theme`
 		)
 		.neq('strava_id', null);
-	if (error) console.log(error);
+	if (error) console.error(error);
 	return {
 		data
 	};

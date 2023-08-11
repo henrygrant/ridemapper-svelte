@@ -28,7 +28,7 @@
 		padding: 1.5rem;
 		background-color: var(--dark);
 		gap: 1rem;
-		border: 1px solid var(--darker);
+		border: 2px solid black;
 		text-align: center;
 	}
 </style>

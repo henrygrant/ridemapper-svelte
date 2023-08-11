@@ -23,3 +23,7 @@ function* iter_range(begin, end, step) {
 export function range(begin, end, step) {
 	return Array.from(iter_range(begin, end, step));
 }
+
+export function dateIsOlderThanTwoHours(date: number) {
+	return new Date().getTime() - date > 7200000;
+}

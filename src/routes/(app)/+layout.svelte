@@ -21,17 +21,23 @@
 	});
 </script>
 
-<div class="app">
-	<main>
-		<slot />
-	</main>
+{#await data.streamed.bigUpdatePromise}
+	<div class="messageContainer"><div class="loader" /></div>
+{:then}
+	<div class="app">
+		<main>
+			<slot />
+		</main>
 
-	<nav>
-		<a href="/browse" class="navitem"><div>Browse</div></a>
-		<a href="/dashboard" class="navitem"><div>Dashboard</div></a>
-		<a href="/map" class="navitem"><div>Map</div></a>
-	</nav>
-</div>
+		<nav>
+			<a href="/browse" class="navitem"><div>Browse</div></a>
+			<a href="/dashboard" class="navitem"><div>Dashboard</div></a>
+			<a href="/map" class="navitem"><div>Map</div></a>
+		</nav>
+	</div>
+{:catch error}
+	<div class="messageContainer">Error {error.message}</div>
+{/await}
 
 <style>
 	.app {
@@ -41,12 +47,20 @@
 		background-color: var(--dark);
 	}
 
+	.messageContainer {
+		display: flex;
+		height: 100%;
+		background-color: var(--dark);
+		justify-content: center;
+		align-items: center;
+	}
+
 	main {
 		flex: 1;
 		display: flex;
 		flex-direction: column;
 		width: 100%;
-		margin: 0 auto;
+		height: 100%;
 		box-sizing: border-box;
 		overflow-y: auto;
 	}
@@ -57,25 +71,47 @@
 		grid-auto-columns: 1fr;
 		grid-template-rows: 50px;
 		gap: 1px;
-		background-color: var(--darker);
+		background-color: black;
 		-webkit-box-shadow: 0px 2px 15px 0px rgba(0, 0, 0, 0.5);
 		-moz-box-shadow: 0px 2px 15px 0px rgba(0, 0, 0, 0.5);
 		box-shadow: 0px 2px 15px 0px rgba(0, 0, 0, 0.5);
 		z-index: 2;
+		letter-spacing: 0.08rem;
 	}
 
 	.navitem {
+		font-family: Impact, 'Anton', Haettenschweiler, 'Arial Narrow Bold', sans-serif;
 		display: flex;
 		justify-content: center;
 		align-items: center;
 		background-color: var(--light);
 		color: var(--darker);
-		border-top: 1px solid var(--darker);
+		border-top: 2px solid black;
 		text-decoration: none;
-		font-size: 1.5rem;
+		font-size: 2rem;
 	}
 	.navitem:hover {
 		background-color: var(--dark);
 		cursor: pointer;
+	}
+
+	.loader {
+		width: 48px;
+		height: 48px;
+		border: 5px solid black;
+		border-bottom-color: transparent;
+		border-radius: 50%;
+		display: inline-block;
+		box-sizing: border-box;
+		animation: rotation 1s linear infinite;
+	}
+
+	@keyframes rotation {
+		0% {
+			transform: rotate(0deg);
+		}
+		100% {
+			transform: rotate(360deg);
+		}
 	}
 </style>

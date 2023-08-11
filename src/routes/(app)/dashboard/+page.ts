@@ -6,22 +6,16 @@ export const load = async ({ parent }) => {
 		throw redirect(303, '/');
 	}
 
-	// strava.config({
-	// 	access_token: STRAVA_ACCESS_TOKEN,
-	// 	client_id: STRAVA_CLIENT_ID,
-	// 	client_secret: STRAVA_SECRET,
-	// 	redirect_uri: url.origin + '/exchangestravacode'
-	// });
-
 	const { data: userMetaData, error: userMetaError } = await supabase
 		.from('user_meta')
 		.select('*')
 		.eq('user_id', session.user.id);
-	if (userMetaError) console.log(userMetaError);
+	if (userMetaError) console.error(userMetaError);
 	const userMeta = userMetaData[0];
 	const { data: activities, error: activitiesError } = await supabase
 		.from('activities')
 		.select('*')
+		.order('start_date', { ascending: false })
 		.eq('user_id', session.user.id);
 
 	return {

@@ -89,7 +89,7 @@ export interface Database {
           map_line_width: number | null
           map_theme: string | null
           strava_access_token: string | null
-          strava_activities_updated_at: string | null
+          strava_activities_updated_at: number | null
           strava_firstname: string | null
           strava_id: string | null
           strava_lastname: string | null
@@ -106,7 +106,7 @@ export interface Database {
           map_line_width?: number | null
           map_theme?: string | null
           strava_access_token?: string | null
-          strava_activities_updated_at?: string | null
+          strava_activities_updated_at?: number | null
           strava_firstname?: string | null
           strava_id?: string | null
           strava_lastname?: string | null
@@ -123,7 +123,7 @@ export interface Database {
           map_line_width?: number | null
           map_theme?: string | null
           strava_access_token?: string | null
-          strava_activities_updated_at?: string | null
+          strava_activities_updated_at?: number | null
           strava_firstname?: string | null
           strava_id?: string | null
           strava_lastname?: string | null

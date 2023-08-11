@@ -17,7 +17,7 @@ export const load = async ({ parent, params }) => {
 		.from('user_meta')
 		.select('*')
 		.eq('user_id', userId);
-	if (userMetaError) console.log(userMetaError);
+	if (userMetaError) console.error(userMetaError);
 	const userMeta = userMetaData[0];
 	const { data: activities, error: activitiesError } = await supabase
 		.from('activities')

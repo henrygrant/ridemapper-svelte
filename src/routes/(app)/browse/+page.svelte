@@ -26,27 +26,38 @@
 
 <style>
 	.container {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		margin-top: 4rem;
-		gap: 4rem;
-		margin-bottom: 4rem;
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+		gap: 1rem;
+		padding: 1rem;
+	}
+
+	.avatar {
+		width: 140px;
+	}
+
+	.avatar img {
+		width: 100%;
+	}
+
+	.name {
+		font-weight: bold;
+		font-size: 1.75rem;
 	}
 
 	.user {
 		display: flex;
 		align-items: center;
-		border: 1px solid var(--darker);
-		padding: 1rem;
+		border: 2px solid black;
 		gap: 1rem;
-		margin-bottom: 2rem;
 		background-color: var(--light);
+		justify-content: space-between;
 	}
 
 	.links {
 		display: flex;
 		flex-direction: column;
 		text-align: center;
+		width: 100%;
 	}
 </style>

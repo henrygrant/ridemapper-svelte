@@ -36,17 +36,49 @@
 				})
 		  )
 		: [];
-	$: color, width, map && setupVectorLayer();
+	$: userMeta.map_line_color, userMeta.map_line_width, map && setupVectorLayer();
 	$: color, width, theme && updateMapPreferences();
-	$: theme && replaceTileLayer();
+	$: userMeta.map_theme && replaceTileLayer();
+
+	let timer;
+	const debounce = (v) => {
+		clearTimeout(timer);
+		timer = setTimeout(() => {
+			color = v;
+		}, 100);
+	};
 
 	const updateMapPreferences = async () => {
-		await data.supabase.from('user_meta').upsert({
-			user_id: user.id,
-			map_theme: theme,
-			map_line_color: color,
-			map_line_width: width
-		});
+		let somethingChanged = false;
+		if (theme !== userMeta.map_theme) {
+			somethingChanged = true;
+			await data.supabase.from('user_meta').upsert({
+				user_id: user.id,
+				map_theme: theme
+			});
+		}
+		if (color !== userMeta.map_line_color) {
+			somethingChanged = true;
+			await data.supabase.from('user_meta').upsert({
+				user_id: user.id,
+				map_line_color: color
+			});
+		}
+		if (width !== userMeta.map_line_width) {
+			somethingChanged = true;
+			await data.supabase.from('user_meta').upsert({
+				user_id: user.id,
+				map_line_width: width
+			});
+		}
+		if (somethingChanged) {
+			const { data: userMetaResp } = await data.supabase
+				.from('user_meta')
+				.select('*')
+				.eq('user_id', user.id)
+				.single();
+			userMeta = userMetaResp ?? userMeta;
+		}
 	};
 
 	const replaceTileLayer = () => {
@@ -116,7 +148,11 @@
 				<option value={i}>width: {i}</option>
 			{/each}
 		</select>
-		<input type="color" bind:value={color} />
+		<input
+			type="color"
+			value={userMeta.map_line_color}
+			on:change={({ target: { value } }) => debounce(value)}
+		/>
 	</div>
 {/if}
 <div id="map" use:setupMap={'map'} />
@@ -131,6 +167,10 @@
 		position: absolute;
 		z-index: 2;
 		right: 0;
+	}
+	.controls input {
+		height: 40px;
+		padding: 0.25rem;
 	}
 	#map {
 		height: 100%;
