@@ -12,6 +12,7 @@ export const load = async ({ parent, params }) => {
 	}
 
 	const userId = params.userid || session.user.id;
+	const isOwnMap = !params.userid || params.userid === session.user.id;
 
 	const { data: userMetaData, error: userMetaError } = await supabase
 		.from('user_meta')
@@ -27,6 +28,7 @@ export const load = async ({ parent, params }) => {
 	return {
 		user: session.user,
 		userMeta,
-		activities
+		activities,
+		isOwnMap
 	};
 };

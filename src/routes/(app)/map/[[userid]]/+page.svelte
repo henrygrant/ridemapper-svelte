@@ -25,7 +25,7 @@
 		light: 'https://a.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}@2x.png',
 		normal: 'https://a.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}@2x.png'
 	};
-	$: ({ user, userMeta, activities } = data);
+	$: ({ user, userMeta, activities, isOwnMap } = data);
 	$: features = activities
 		? activities.map((activity) =>
 				new Polyline({
@@ -136,7 +136,7 @@
 	};
 </script>
 
-{#if (userMeta.user_id = user.id)}
+{#if isOwnMap}
 	<div class="controls">
 		<select bind:value={theme}>
 			{#each Object.keys(themes) as theme}
@@ -158,6 +158,9 @@
 <div id="map" use:setupMap={'map'} />
 
 <style>
+	.container {
+		height: 100%;
+	}
 	.controls {
 		display: flex;
 		justify-content: flex-end;

@@ -29,7 +29,9 @@
 					<a href="https://strava.com/activities/{activity.id}" target="_blank">
 						<h3 class="activity-name">{activity.name}</h3>
 					</a>
-					<div>{activity.type} on {new Date(activity.start_date).toLocaleDateString('en-US')}</div>
+					<div>
+						{activity.type} on {new Date(activity.start_date).toLocaleDateString('en-US')}
+					</div>
 					<div class="activity-metrics">
 						<div>{(activity.distance * 0.000621371192).toFixed(2)}mi</div>
 						<div>{(activity.elevation_gain * 0.3048).toFixed(1)}ft</div>
