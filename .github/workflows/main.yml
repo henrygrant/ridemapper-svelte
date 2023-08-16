@@ -7,12 +7,6 @@ on:
     branches: [ main ]
 
   workflow_dispatch:
-  
-env:
-  PUBLIC_STRAVA_CLIENT_ID: ${{ vars.PUBLIC_STRAVA_CLIENT_ID }}
-  PUBLIC_SUPABASE_ANON_KEY: ${{ vars.PUBLIC_SUPABASE_ANON_KEY }}
-  PUBLIC_SUPABASE_URL: ${{ vars.PUBLIC_SUPABASE_URL }}
-  STRAVA_SECRET: ${{ secrets.STRAVA_SECRET }}
 
 jobs:
   deploy:
@@ -26,10 +20,10 @@ jobs:
     - name: Make Dotenv
       run: |
         touch .env
-        echo PUBLIC_STRAVA_CLIENT_ID=${{ PUBLIC_STRAVA_CLIENT_ID }} >> .env
-        echo PUBLIC_STRAVA_CLIENT_ID=${{ PUBLIC_SUPABASE_ANON_KEY }} >> .env
-        echo PUBLIC_STRAVA_CLIENT_ID=${{ PUBLIC_SUPABASE_URL }} >> .env
-        echo PUBLIC_STRAVA_CLIENT_ID=${{ STRAVA_SECRET }} >> .env
+        echo PUBLIC_STRAVA_CLIENT_ID=${{ vars.PUBLIC_STRAVA_CLIENT_ID }} >> .env
+        echo PUBLIC_SUPABASE_ANON_KEY=${{ vars.PUBLIC_SUPABASE_ANON_KEY }} >> .env
+        echo PUBLIC_SUPABASE_URL=${{ vars.PUBLIC_SUPABASE_URL }} >> .env
+        echo STRAVA_SECRET=${{ secrets.STRAVA_SECRET }} >> .env
 
     - uses: actions/setup-node@v3
       with:
