@@ -7,6 +7,12 @@ on:
     branches: [ main ]
 
   workflow_dispatch:
+  
+env:
+  PUBLIC_STRAVA_CLIENT_ID: ${{ env.PUBLIC_STRAVA_CLIENT_ID }}
+  PUBLIC_SUPABASE_ANON_KEY: ${{ env.PUBLIC_SUPABASE_ANON_KEY }}
+  PUBLIC_SUPABASE_URL: ${{ env.PUBLIC_SUPABASE_URL }}
+  STRAVA_SECRET: ${{ secrets.STRAVA_SECRET }}
 
 jobs:
   deploy:
@@ -17,16 +23,19 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
 
+    - name: Make Dotenv
+      run: |
+        touch .env
+        echo PUBLIC_STRAVA_API_KEY=${{ PUBLIC_STRAVA_API_KEY }} >> .env
+        echo PUBLIC_STRAVA_API_KEY=${{ PUBLIC_SUPABASE_ANON_KEY }} >> .env
+        echo PUBLIC_STRAVA_API_KEY=${{ PUBLIC_SUPABASE_URL }} >> .env
+        echo PUBLIC_STRAVA_API_KEY=${{ STRAVA_SECRET }} >> .env
+
     - uses: actions/setup-node@v3
       with:
         node-version: 18
     - run: npm install
     - run: npm run build
-      env:
-        PUBLIC_STRAVA_CLIENT_ID: $PUBLIC_STRAVA_CLIENT_ID
-        PUBLIC_SUPABASE_ANON_KEY: $PUBLIC_SUPABASE_ANON_KEY
-        PUBLIC_SUPABASE_URL: $PUBLIC_SUPABASE_URL
-        STRAVA_SECRET: ${{ secrets.STRAVA_SECRET }}
 
     - name: Deploy to App Engine
       id: deploy
