@@ -26,10 +26,10 @@ jobs:
     - name: Make Dotenv
       run: |
         touch .env
-        echo PUBLIC_STRAVA_API_KEY=${{ PUBLIC_STRAVA_API_KEY }} >> .env
-        echo PUBLIC_STRAVA_API_KEY=${{ PUBLIC_SUPABASE_ANON_KEY }} >> .env
-        echo PUBLIC_STRAVA_API_KEY=${{ PUBLIC_SUPABASE_URL }} >> .env
-        echo PUBLIC_STRAVA_API_KEY=${{ STRAVA_SECRET }} >> .env
+        echo PUBLIC_STRAVA_CLIENT_ID=${{ PUBLIC_STRAVA_CLIENT_ID }} >> .env
+        echo PUBLIC_STRAVA_CLIENT_ID=${{ PUBLIC_SUPABASE_ANON_KEY }} >> .env
+        echo PUBLIC_STRAVA_CLIENT_ID=${{ PUBLIC_SUPABASE_URL }} >> .env
+        echo PUBLIC_STRAVA_CLIENT_ID=${{ STRAVA_SECRET }} >> .env
 
     - uses: actions/setup-node@v3
       with:
