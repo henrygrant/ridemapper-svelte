@@ -10,6 +10,7 @@
 	import { Style, Stroke } from 'ol/style';
 	import type Geometry from 'ol/geom/Geometry.js';
 	import { range } from '../../../../lib/util';
+	import type { Size } from 'ol/size';
 
 	export let data;
 
@@ -86,7 +87,8 @@
 			map?.removeLayer(tileLayer);
 			tileLayer = new TileLayer({
 				source: new XYZ({
-					url: themes[theme]
+					url: themes[theme],
+					crossOrigin: 'anonymous'
 				})
 			});
 			map?.getLayers().insertAt(0, tileLayer);
@@ -111,10 +113,62 @@
 		map?.addLayer(vectorLayer);
 	};
 
+	const downloadMap = () => {
+		const mapCanvas = document.createElement('canvas') as HTMLCanvasElement;
+		const size = map?.getSize() as Size;
+		mapCanvas.width = size[0];
+		mapCanvas.height = size[1];
+		const mapContext = mapCanvas.getContext('2d') as CanvasRenderingContext2D;
+		const canvases = map
+			?.getViewport()
+			.querySelectorAll('.ol-layer canvas, canvas.ol-layer') as NodeListOf<HTMLCanvasElement>;
+		canvases?.forEach((canvas) => {
+			if (canvas.width > 0) {
+				const opacity = canvas?.parentNode?.style?.opacity || canvas.style.opacity;
+				mapContext.globalAlpha = opacity === '' ? 1 : Number(opacity);
+				let matrix;
+				const transform = canvas.style.transform as string;
+				if (transform) {
+					matrix = transform
+						.match(/^matrix\(([^\(]*)\)$/)[1]
+						.split(',')
+						.map(Number);
+					console.log(transform, matrix);
+				} else {
+					matrix = [
+						parseFloat(canvas.style.width) / canvas.width,
+						0,
+						0,
+						parseFloat(canvas.style.height) / canvas.height,
+						0,
+						0
+					];
+					console.log(matrix);
+				}
+				// Apply the transform to the export map context
+				// CanvasRenderingContext2D.prototype.setTransform.apply(mapContext, matrix);
+				// const backgroundColor = canvas?.parentNode?.style?.backgroundColor;
+				// if (backgroundColor) {
+				// 	mapContext.fillStyle = backgroundColor;
+				// 	mapContext.fillRect(0, 0, canvas.width, canvas.height);
+				// }
+				mapContext.drawImage(canvas, 0, 0);
+			}
+		});
+		mapContext.globalAlpha = 1;
+		mapContext.setTransform(1, 0, 0, 1, 0, 0);
+		console.log(mapContext);
+		console.log(mapCanvas);
+		const link = document.getElementById('image-download') as HTMLElement;
+		link.href = mapCanvas.toDataURL();
+		link.click();
+	};
+
 	const setupMap = (node, _id) => {
 		tileLayer = new TileLayer({
 			source: new XYZ({
-				url: themes[theme]
+				url: themes[theme],
+				crossOrigin: 'anonymous'
 			})
 		});
 		map = new Map({
@@ -138,6 +192,8 @@
 
 {#if isOwnMap}
 	<div class="controls">
+		<button on:click={() => downloadMap()}>Download</button>
+		<a id="image-download" download="map.png" />
 		<select bind:value={theme}>
 			{#each Object.keys(themes) as theme}
 				<option value={theme}>theme: {theme}</option>

@@ -1,9 +1,11 @@
 <script lang="ts">
 	import { PUBLIC_STRAVA_CLIENT_ID } from '$env/static/public';
 	import { page } from '$app/stores';
+	import Activity from '../../../components/Activity.svelte';
 	export let data;
-	let { user, userMeta, activities } = data;
-	$: ({ user, userMeta, activities } = data);
+	let { user, userMeta, activities, supabase } = data;
+	$: ({ user, userMeta, activities, supabase } = data);
+	let typeFilter: string = null;
 </script>
 
 {#if userMeta && userMeta.strava_id}
@@ -24,19 +26,14 @@
 	</div>
 	<div class="activity-container">
 		{#if activities && activities.length}
+			<select bind:value={typeFilter}>
+				<option value={null}>Type</option>
+				{#each new Set([...activities.map((a) => a.type)]) as type}
+					<option value={type}>{type}</option>
+				{/each}
+			</select>
 			{#each activities as activity}
-				<div class="activity-card">
-					<a href="https://strava.com/activities/{activity.id}" target="_blank">
-						<h3 class="activity-name">{activity.name}</h3>
-					</a>
-					<div>
-						{activity.type} on {new Date(activity.start_date).toLocaleDateString('en-US')}
-					</div>
-					<div class="activity-metrics">
-						<div>{(activity.distance * 0.000621371192).toFixed(2)}mi</div>
-						<div>{(activity.elevation_gain * 0.3048).toFixed(1)}ft</div>
-					</div>
-				</div>
+				<Activity {activity} {supabase} />
 			{/each}
 		{/if}
 	</div>
@@ -101,27 +98,7 @@
 		margin-top: 4rem;
 	}
 
-	.activity-name {
-		font-weight: bold;
-		font-size: 1.5rem;
-	}
-
-	.activity-card {
+	.activity-container > :global(*) {
 		grid-column: 2/3;
-		border: 2px solid black;
-		background-color: var(--light);
-		padding: 1rem;
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		width: 100%;
-		flex-grow: 1;
-	}
-
-	.activity-metrics {
-		width: 100%;
-		display: flex;
-		justify-content: space-between;
-		column-gap: 1rem;
 	}
 </style>
