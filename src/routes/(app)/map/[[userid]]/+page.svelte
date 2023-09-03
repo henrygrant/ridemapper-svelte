@@ -76,10 +76,8 @@
 
 {#if !readOnly}
 	<div class="controls">
-		<button on:click={() => map && downloadMap(map, downloadEl)}>Download Map</button>
-		{#if navigator.canShare()}
-			<button on:click={() => map && shareMap(map)}>Share Map</button>
-		{/if}
+		<button on:click={() => map && downloadMap(map, downloadEl)}>📥</button>
+		<button on:click={() => map && shareMap(map)}>📤</button>
 		<select
 			value={$userMeta?.map_theme}
 			on:change={({ currentTarget: { value } }) => (config.theme = value)}
