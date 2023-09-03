@@ -126,10 +126,10 @@ export const downloadMap = (map: Map, anchor: HTMLAnchorElement) => {
 							.map(Number);
 					} else {
 						matrix = [
-							parseFloat(canvas.style.width) / (canvas.width * scale),
+							(parseFloat(canvas.style.width) / canvas.width) * scale,
 							0,
 							0,
-							parseFloat(canvas.style.height) / (canvas.height * scale),
+							(parseFloat(canvas.style.height) / canvas.height) * scale,
 							0,
 							0
 						];
@@ -177,10 +177,10 @@ export const shareMap = (map: Map) => {
 							.map(Number);
 					} else {
 						matrix = [
-							parseFloat(canvas.style.width) / (canvas.width * scale),
+							(parseFloat(canvas.style.width) / canvas.width) * scale,
 							0,
 							0,
-							parseFloat(canvas.style.height) / (canvas.height * scale),
+							(parseFloat(canvas.style.height) / canvas.height) * scale,
 							0,
 							0
 						];
