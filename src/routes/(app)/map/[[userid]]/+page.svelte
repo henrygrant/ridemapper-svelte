@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { range } from '$lib/util';
 	import { userMeta } from '$lib/store';
-	import { makeMap, makeTileLayer, makeVectorLayer } from '$lib/mapUtil.js';
+	import { downloadMap, makeMap, makeTileLayer, makeVectorLayer, shareMap } from '$lib/mapUtil.js';
 	import type Map from 'ol/Map';
 
 	export let data;
@@ -12,6 +12,7 @@
 	$: !readOnly && config && $userMeta?.user_id && updateMapPreferences($userMeta.user_id);
 
 	let map: Map | null = null;
+	let downloadEl;
 
 	let timer;
 	const handleColorSelection = (v) => {
@@ -37,7 +38,7 @@
 			somethingChanged = true;
 			map?.removeLayer(vectorLayer);
 			vectorLayer = makeVectorLayer(features, config);
-			map?.addLayer(vectorLayer)
+			map?.addLayer(vectorLayer);
 			await data.supabase.from('user_meta').upsert({
 				user_id: userId,
 				map_line_color: config.color
@@ -47,7 +48,7 @@
 			somethingChanged = true;
 			map?.removeLayer(vectorLayer);
 			vectorLayer = makeVectorLayer(features, config);
-			map?.addLayer(vectorLayer)
+			map?.addLayer(vectorLayer);
 			await data.supabase.from('user_meta').upsert({
 				user_id: userId,
 				map_line_width: config.width
@@ -60,8 +61,8 @@
 
 	const setupMap = (node, _id) => {
 		map = makeMap();
-		map.addLayer(tileLayer)
-		map.addLayer(vectorLayer) 
+		map.addLayer(tileLayer);
+		map.addLayer(vectorLayer);
 		return {
 			destroy() {
 				if (map) {
@@ -75,6 +76,10 @@
 
 {#if !readOnly}
 	<div class="controls">
+		<button on:click={() => map && downloadMap(map, downloadEl)}>Download Map</button>
+		{#if navigator.canShare()}
+			<button on:click={() => map && shareMap(map)}>Share Map</button>
+		{/if}
 		<select
 			value={$userMeta?.map_theme}
 			on:change={({ currentTarget: { value } }) => (config.theme = value)}
@@ -93,6 +98,7 @@
 			value={$userMeta?.map_line_color}
 			on:change={({ currentTarget: { value } }) => handleColorSelection(value)}
 		/>
+		<a bind:this={downloadEl} download="map.png" />
 	</div>
 {/if}
 <div id="map" use:setupMap={'map'} />
