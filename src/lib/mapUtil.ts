@@ -117,6 +117,7 @@ export const downloadMap = (map: Map, anchor: HTMLAnchorElement) => {
 					mapContext.globalAlpha = opacity === '' ? 1 : Number(opacity);
 					let matrix;
 					const transform = canvas.style.transform;
+                    const scale = window.devicePixelRatio
 					if (transform) {
 						// Get the transform parameters from the style's transform matrix
 						matrix = transform
@@ -125,10 +126,10 @@ export const downloadMap = (map: Map, anchor: HTMLAnchorElement) => {
 							.map(Number);
 					} else {
 						matrix = [
-							parseFloat(canvas.style.width) / canvas.width,
+							parseFloat(canvas.style.width) / (canvas.width * scale),
 							0,
 							0,
-							parseFloat(canvas.style.height) / canvas.height,
+							parseFloat(canvas.style.height) / (canvas.height * scale),
 							0,
 							0
 						];
@@ -167,6 +168,7 @@ export const shareMap = (map: Map) => {
 					mapContext.globalAlpha = opacity === '' ? 1 : Number(opacity);
 					let matrix;
 					const transform = canvas.style.transform;
+                    const scale = window.devicePixelRatio
 					if (transform) {
 						// Get the transform parameters from the style's transform matrix
 						matrix = transform
@@ -175,10 +177,10 @@ export const shareMap = (map: Map) => {
 							.map(Number);
 					} else {
 						matrix = [
-							parseFloat(canvas.style.width) / canvas.width,
+							parseFloat(canvas.style.width) / (canvas.width * scale),
 							0,
 							0,
-							parseFloat(canvas.style.height) / canvas.height,
+							parseFloat(canvas.style.height) / (canvas.height * scale),
 							0,
 							0
 						];
