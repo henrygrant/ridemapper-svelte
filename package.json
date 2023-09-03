@@ -12,8 +12,9 @@
 		"format": "prettier --plugin-search-dir . --write .",
 		"test:integration": "playwright test",
 		"test:unit": "vitest",
-		"sb:types": "npx supabase gen types typescript --project-id qiqvioeaamgftzxpyrma > database.types.ts",
-		"sk:sync": "npx svelte-kit sync",
+		"sb:types": "supabase gen types typescript --project-id qiqvioeaamgftzxpyrma > database.types.ts",
+		"sb:login": "supabase login",
+		"sk:sync": "svelte-kit sync",
 		"gc:deploy": "gcloud app deploy --project henry-primary build/app.yaml"
 	},
 	"devDependencies": {

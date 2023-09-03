@@ -16,6 +16,7 @@ export interface Database {
           distance: number
           elapsed_time: number
           elevation_gain: number
+          enabled: boolean
           moving_time: number
           name: string
           polyline: string | null
@@ -31,6 +32,7 @@ export interface Database {
           distance: number
           elapsed_time: number
           elevation_gain: number
+          enabled?: boolean
           moving_time: number
           name: string
           polyline?: string | null
@@ -46,6 +48,7 @@ export interface Database {
           distance?: number
           elapsed_time?: number
           elevation_gain?: number
+          enabled?: boolean
           moving_time?: number
           name?: string
           polyline?: string | null
@@ -63,24 +66,6 @@ export interface Database {
             referencedColumns: ["id"]
           }
         ]
-      }
-      test: {
-        Row: {
-          created_at: string | null
-          id: number
-          thing: string | null
-        }
-        Insert: {
-          created_at?: string | null
-          id?: number
-          thing?: string | null
-        }
-        Update: {
-          created_at?: string | null
-          id?: number
-          thing?: string | null
-        }
-        Relationships: []
       }
       user_meta: {
         Row: {

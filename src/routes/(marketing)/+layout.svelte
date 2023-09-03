@@ -6,7 +6,6 @@
 
 	export let data;
 
-	let { supabase, session } = data;
 	$: ({ supabase, session } = data);
 
 	onMount(() => {

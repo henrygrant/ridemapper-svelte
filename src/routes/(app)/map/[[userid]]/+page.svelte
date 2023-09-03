@@ -1,130 +1,67 @@
 <script lang="ts">
-	import Map from 'ol/Map';
-	import View from 'ol/View';
-	import TileLayer from 'ol/layer/Tile';
-	import XYZ from 'ol/source/XYZ';
-	import Polyline from 'ol/format/Polyline.js';
-	import VectorLayer from 'ol/layer/Vector';
-	import VectorSource from 'ol/source/Vector';
-	import { fromLonLat } from 'ol/proj';
-	import { Style, Stroke } from 'ol/style';
-	import type Geometry from 'ol/geom/Geometry.js';
-	import { range } from '../../../../lib/util';
+	import { range } from '$lib/util';
+	import { userMeta } from '$lib/store';
+	import { makeMap, makeTileLayer, makeVectorLayer } from '$lib/mapUtil.js';
+	import type Map from 'ol/Map';
 
 	export let data;
 
-	let { user, userMeta, activities } = data;
+	$: ({ refreshUserMeta } = data);
+	let { config, features, vectorLayer, tileLayer } = data;
+	const { readOnly, mapThemes } = data;
+	$: !readOnly && config && $userMeta?.user_id && updateMapPreferences($userMeta.user_id);
+
 	let map: Map | null = null;
-	let vectorLayer: VectorLayer<VectorSource<Geometry>> | null = null;
-	let tileLayer: TileLayer<XYZ> | null = null;
-	let color: string = userMeta.map_line_color || '#000000';
-	let width: number = userMeta.map_line_width || 2;
-	let theme: string = userMeta.map_theme || 'normal';
-	const themes = {
-		dark: 'https://a.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}@2x.png',
-		light: 'https://a.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}@2x.png',
-		normal: 'https://a.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}@2x.png'
-	};
-	$: ({ user, userMeta, activities, isOwnMap } = data);
-	$: features = activities
-		? activities.map((activity) =>
-				new Polyline({
-					factor: 1e5
-				}).readFeature(activity.polyline, {
-					dataProjection: 'EPSG:4326',
-					featureProjection: 'EPSG:3857'
-				})
-		  )
-		: [];
-	$: userMeta.map_line_color, userMeta.map_line_width, map && setupVectorLayer();
-	$: color, width, theme && updateMapPreferences();
-	$: userMeta.map_theme && replaceTileLayer();
 
 	let timer;
-	const debounce = (v) => {
+	const handleColorSelection = (v) => {
 		clearTimeout(timer);
 		timer = setTimeout(() => {
-			color = v;
+			config.color = v;
 		}, 100);
 	};
 
-	const updateMapPreferences = async () => {
+	const updateMapPreferences = async (userId: string) => {
 		let somethingChanged = false;
-		if (theme !== userMeta.map_theme) {
+		if (config.theme !== $userMeta?.map_theme) {
 			somethingChanged = true;
+			map?.removeLayer(tileLayer);
+			tileLayer = makeTileLayer(mapThemes[config.theme]);
+			map?.getLayers().insertAt(0, tileLayer);
 			await data.supabase.from('user_meta').upsert({
-				user_id: user.id,
-				map_theme: theme
+				user_id: userId,
+				map_theme: config.theme
 			});
 		}
-		if (color !== userMeta.map_line_color) {
+		if (config.color !== $userMeta?.map_line_color) {
 			somethingChanged = true;
+			map?.removeLayer(vectorLayer);
+			vectorLayer = makeVectorLayer(features, config);
+			map?.addLayer(vectorLayer)
 			await data.supabase.from('user_meta').upsert({
-				user_id: user.id,
-				map_line_color: color
+				user_id: userId,
+				map_line_color: config.color
 			});
 		}
-		if (width !== userMeta.map_line_width) {
+		if (config.width !== $userMeta?.map_line_width) {
 			somethingChanged = true;
+			map?.removeLayer(vectorLayer);
+			vectorLayer = makeVectorLayer(features, config);
+			map?.addLayer(vectorLayer)
 			await data.supabase.from('user_meta').upsert({
-				user_id: user.id,
-				map_line_width: width
+				user_id: userId,
+				map_line_width: config.width
 			});
 		}
 		if (somethingChanged) {
-			const { data: userMetaResp } = await data.supabase
-				.from('user_meta')
-				.select('*')
-				.eq('user_id', user.id)
-				.single();
-			userMeta = userMetaResp ?? userMeta;
+			await refreshUserMeta();
 		}
-	};
-
-	const replaceTileLayer = () => {
-		if (tileLayer) {
-			map?.removeLayer(tileLayer);
-			tileLayer = new TileLayer({
-				source: new XYZ({
-					url: themes[theme]
-				})
-			});
-			map?.getLayers().insertAt(0, tileLayer);
-		}
-	};
-
-	const setupVectorLayer = () => {
-		if (vectorLayer) {
-			map?.removeLayer(vectorLayer);
-		}
-		vectorLayer = new VectorLayer({
-			source: new VectorSource({
-				features
-			}),
-			style: new Style({
-				stroke: new Stroke({
-					color,
-					width
-				})
-			})
-		});
-		map?.addLayer(vectorLayer);
 	};
 
 	const setupMap = (node, _id) => {
-		tileLayer = new TileLayer({
-			source: new XYZ({
-				url: themes[theme]
-			})
-		});
-		map = new Map({
-			target: 'map',
-			layers: [tileLayer],
-			view: new View({
-				center: fromLonLat([-73.94186, 40.724545]),
-				zoom: 11
-			})
-		});
+		map = makeMap();
+		map.addLayer(tileLayer)
+		map.addLayer(vectorLayer) 
 		return {
 			destroy() {
 				if (map) {
@@ -136,31 +73,31 @@
 	};
 </script>
 
-{#if isOwnMap}
+{#if !readOnly}
 	<div class="controls">
-		<select bind:value={theme}>
-			{#each Object.keys(themes) as theme}
+		<select
+			value={$userMeta?.map_theme}
+			on:change={({ currentTarget: { value } }) => (config.theme = value)}
+		>
+			{#each Object.keys(mapThemes) as theme}
 				<option value={theme}>theme: {theme}</option>
 			{/each}
 		</select>
-		<select bind:value={width}>
+		<select bind:value={config.width}>
 			{#each range(1, 21, 1) as i}
 				<option value={i}>width: {i}</option>
 			{/each}
 		</select>
 		<input
 			type="color"
-			value={userMeta.map_line_color}
-			on:change={({ target: { value } }) => debounce(value)}
+			value={$userMeta?.map_line_color}
+			on:change={({ currentTarget: { value } }) => handleColorSelection(value)}
 		/>
 	</div>
 {/if}
 <div id="map" use:setupMap={'map'} />
 
 <style>
-	.container {
-		height: 100%;
-	}
 	.controls {
 		display: flex;
 		justify-content: flex-end;

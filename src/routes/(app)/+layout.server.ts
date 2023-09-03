@@ -1,18 +1,15 @@
-import { redirect } from '@sveltejs/kit';
 import { getAllStravaActivities, getStravaAthlete, refreshStravaToken } from '$lib/stravaApi';
 import { dateIsOlderThanTwoHours } from '$lib/util';
+import type { LayoutServerLoad } from './$types';
 
-export const load = async ({ locals: { getSession, supabase } }) => {
-	const session = await getSession();
-	if (!session) {
-		throw redirect(303, '/');
-	}
+export const load: LayoutServerLoad = async ({ locals: { getSession, supabase } }) => {
 
 	const bigUpdatePromise = async () => {
+		const session = await getSession();
 		const { data: userMeta, error } = await supabase
 			.from('user_meta')
 			.select('*')
-			.eq('user_id', session.user.id)
+			.eq('user_id', session?.user.id)
 			.single();
 		if (error) {
 			return; // user hasn't connected strava/made a userMeta yet
@@ -27,7 +24,7 @@ export const load = async ({ locals: { getSession, supabase } }) => {
 					!userMeta.strava_activities_updated_at ||
 					dateIsOlderThanTwoHours(userMeta.strava_activities_updated_at);
 				const { error: userMetaUpdatedError } = await supabase.from('user_meta').upsert({
-					user_id: session.user.id,
+					user_id: session?.user.id,
 					strava_firstname: athlete.firstname,
 					strava_lastname: athlete.lastname,
 					strava_profile_pic_url: athlete.profile,
@@ -49,7 +46,7 @@ export const load = async ({ locals: { getSession, supabase } }) => {
 						const { error: activitiesUpsertError } = await supabase.from('activities').upsert(
 							activities.map((activity) => ({
 								activity_id: activity.id,
-								user_id: session.user.id,
+								user_id: session?.user.id,
 								type: activity.type,
 								name: activity.name,
 								distance: activity.distance,
@@ -66,7 +63,7 @@ export const load = async ({ locals: { getSession, supabase } }) => {
 							throw new Error('Failed to update the database with new activities');
 						}
 						const { error: userMetaUpdatedAgainError } = await supabase.from('user_meta').upsert({
-							user_id: session.user.id,
+							user_id: session?.user.id,
 							strava_activities_updated_at: Date.now()
 						});
 						if (userMetaUpdatedAgainError) {
@@ -80,7 +77,7 @@ export const load = async ({ locals: { getSession, supabase } }) => {
 	};
 
 	return {
-		session,
+		session: getSession(),
 		streamed: {
 			bigUpdatePromise: bigUpdatePromise()
 		}

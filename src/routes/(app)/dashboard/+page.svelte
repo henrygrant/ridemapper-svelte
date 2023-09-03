@@ -1,32 +1,30 @@
 <script lang="ts">
 	import { PUBLIC_STRAVA_CLIENT_ID } from '$env/static/public';
 	import { page } from '$app/stores';
-	export let data;
-	let { user, userMeta, activities } = data;
-	$: ({ user, userMeta, activities } = data);
+	import {activities, userMeta} from '$lib/store'
 </script>
 
-{#if userMeta && userMeta.strava_id}
+{#if $userMeta && $userMeta.strava_id}
 	<div class="athlete-card">
 		<div class="athlete-card-avatar">
-			<img src={userMeta.strava_profile_pic_url} alt="avatar" />
+			<img src={$userMeta.strava_profile_pic_url} alt="avatar" />
 		</div>
-		<a href="https://www.strava.com/athletes/{userMeta.strava_id}" target="_blank">
+		<a href="https://www.strava.com/athletes/{$userMeta.strava_id}" target="_blank">
 			<h2 class="athlete-card-title">
-				{userMeta.strava_firstname}
-				{userMeta.strava_lastname}
+				{$userMeta.strava_firstname}
+				{$userMeta.strava_lastname}
 			</h2>
 		</a>
-		<p class="athlete-card-id">Strava ID: {userMeta.strava_id}</p>
+		<p class="athlete-card-id">Strava ID: {$userMeta.strava_id}</p>
 	</div>
 	<div class="auth-controls">
 		<form action="/signout" method="POST"><button>Signout</button></form>
 	</div>
 	<div class="activity-container">
-		{#if activities && activities.length}
-			{#each activities as activity}
+		{#if $activities && $activities.length}
+			{#each $activities as activity}
 				<div class="activity-card">
-					<a href="https://strava.com/activities/{activity.id}" target="_blank">
+					<a href="https://strava.com/activities/{activity.activity_id}" target="_blank">
 						<h3 class="activity-name">{activity.name}</h3>
 					</a>
 					<div>

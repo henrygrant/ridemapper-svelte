@@ -32,7 +32,7 @@
 		<nav>
 			<a href="/browse" class="navitem"><div>Browse</div></a>
 			<a href="/dashboard" class="navitem"><div>Dashboard</div></a>
-			<a href="/map" class="navitem"><div>Map</div></a>
+			<a href="/map" class="navitem" data-sveltekit-reload><div>Map</div></a>
 		</nav>
 	</div>
 {:catch error}
