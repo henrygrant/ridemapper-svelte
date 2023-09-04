@@ -135,7 +135,7 @@
 		display: flex;
 		flex-direction: column;
 		background-color: var(--dark);
-		padding: 1.5rem;
+		padding: 1.3rem .75rem .75rem;
 		border: 2px solid black;
 		gap: 1.5rem;
 
