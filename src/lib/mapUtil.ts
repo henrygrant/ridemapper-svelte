@@ -23,7 +23,8 @@ export const makeMap = () => {
 		view: new View({
 			center: fromLonLat([-73.94186, 40.724545]),
 			zoom: 11
-		})
+		}),
+        controls: []
 	});
 };
 

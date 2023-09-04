@@ -70,7 +70,7 @@
 		grid-auto-flow: column;
 		grid-auto-columns: 1fr;
 		grid-template-rows: 50px;
-		gap: 1px;
+		gap: 2px;
 		background-color: black;
 		-webkit-box-shadow: 0px 2px 15px 0px rgba(0, 0, 0, 0.5);
 		-moz-box-shadow: 0px 2px 15px 0px rgba(0, 0, 0, 0.5);
