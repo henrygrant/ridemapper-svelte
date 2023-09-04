@@ -83,7 +83,7 @@
 {#if !readOnly}
 	<div class="controls">
 		<div class="left">
-			<div class="optionContainer">
+			<div class="optionContainer" style="margin-bottom: .5rem;">
 				<div>Line Color:</div>
 				<ColorPicker bind:hex canChangeMode={false} isAlpha={false} label="" />
 			</div>
@@ -137,8 +137,7 @@
 		background-color: var(--dark);
 		padding: 1.3rem .75rem .75rem;
 		border: 2px solid black;
-		gap: 1.5rem;
-
+		gap: .75rem;
 	}
 	.controls .right {
 		display: flex;
