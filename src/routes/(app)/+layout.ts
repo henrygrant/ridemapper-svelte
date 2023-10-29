@@ -3,7 +3,7 @@ import { PUBLIC_SUPABASE_ANON_KEY, PUBLIC_SUPABASE_URL } from '$env/static/publi
 import { createSupabaseLoadClient } from '@supabase/auth-helpers-sveltekit';
 import type { Database } from '../../../database.types';
 import { redirect } from '@sveltejs/kit';
-import {activities, userMeta} from '$lib/store'
+import { activities, userMeta } from '$lib/store';
 import type { LayoutLoad } from './$types';
 
 export const load: LayoutLoad = async ({ fetch, data, depends }) => {
@@ -28,22 +28,23 @@ export const load: LayoutLoad = async ({ fetch, data, depends }) => {
 			.from('user_meta')
 			.select('*')
 			.eq('user_id', session.user.id)
-			.single()
+			.single();
 		if (error) console.error(error);
-		userMeta.set(data)
-	}
-	await refreshUserMeta()
+		userMeta.set(data);
+	};
+	await refreshUserMeta();
 
 	const refreshActivities = async () => {
 		const { data, error } = await supabase
 			.from('activities')
 			.select('*')
 			.eq('user_id', session.user.id)
+			.in('type', ['Ride', 'Run'])
 			.order('start_date', { ascending: false });
 		if (error) console.error(error);
-		activities.set(data)
-	}
-	await refreshActivities()
+		activities.set(data);
+	};
+	await refreshActivities();
 
 	return { supabase, session, streamed: data?.streamed, refreshUserMeta, refreshActivities };
 };
