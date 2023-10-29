@@ -1,5 +1,6 @@
 <script lang="ts">
 	import '../styles.css';
+	import Loader from '$lib/components/Loader.svelte';
 	import { invalidate } from '$app/navigation';
 	import { onMount } from 'svelte';
 
@@ -22,7 +23,7 @@
 </script>
 
 {#await data.streamed.bigUpdatePromise}
-	<div class="messageContainer"><div class="loader" /></div>
+	<div class="messageContainer"><Loader /></div>
 {:then}
 	<div class="app">
 		<main>
@@ -93,17 +94,6 @@
 	.navitem:hover {
 		background-color: var(--dark);
 		cursor: pointer;
-	}
-
-	.loader {
-		width: 48px;
-		height: 48px;
-		border: 5px solid black;
-		border-bottom-color: transparent;
-		border-radius: 50%;
-		display: inline-block;
-		box-sizing: border-box;
-		animation: rotation 1s linear infinite;
 	}
 
 	@keyframes rotation {
