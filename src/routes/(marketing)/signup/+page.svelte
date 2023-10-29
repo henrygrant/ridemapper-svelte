@@ -1,11 +1,28 @@
 <!-- // src/routes/login/+page.svelte -->
 <script lang="ts">
-	import { enhance } from '$app/forms';
+	import { enhance, applyAction } from '$app/forms';
+	import { goto } from '$app/navigation';
 	export let form;
+	let loading;
 </script>
 
 <div class="container">
-	<form method="post" action="?/signup" use:enhance>
+	<form
+		method="post"
+		action="?/signup"
+		use:enhance={() => {
+			loading = true;
+			return async ({ result }) => {
+				if (result.type === 'redirect') {
+					goto(result.location);
+					return;
+				} else {
+					await applyAction(result);
+				}
+				loading = false;
+			};
+		}}
+	>
 		{#if form?.error}
 			<span class="">{form.error}</span>
 		{/if}
@@ -32,5 +49,9 @@
 		gap: 1rem;
 		border: 2px solid black;
 		text-align: center;
+	}
+
+	a {
+		font-weight: bold;
 	}
 </style>

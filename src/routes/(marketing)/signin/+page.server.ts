@@ -36,9 +36,10 @@ export const actions = {
 		});
 
 		if (error) {
-			if (error instanceof AuthApiError && error.status === 400) {
+			console.log(error);
+			if (error instanceof AuthApiError && error.status === 422) {
 				return fail(400, {
-					error: 'Invalid credentials.',
+					error: "Please enter the email you've registered with.",
 					email
 				});
 			}

@@ -1,20 +1,43 @@
 <!-- // src/routes/signin/+page.svelte -->
 <script lang="ts">
-	import { enhance } from '$app/forms';
-	export let form;
+	import { enhance, applyAction } from '$app/forms';
+	import { goto } from '$app/navigation';
+	import Loader from '$lib/components/Loader.svelte';
+	import type { ActionData } from './$types';
+	export let form: ActionData;
+	let loading;
 </script>
 
 <div class="container">
-	<form method="post" action="?/signin" use:enhance>
-		{#if form?.error}
-			<span class="">{form.error}</span>
-		{/if}
-		<input name="email" value={form?.email ?? ''} placeholder="email" />
-		<input type="password" name="password" placeholder="password" />
-		<button>Sign in</button>
-		<a href="/signup">Sign up instead</a>
-		<button class="look-like-anchor" formaction="?/resetpassword">Reset password</button>
-	</form>
+	{#if loading}
+		<Loader />
+	{:else}
+		<form
+			method="post"
+			action="?/signin"
+			use:enhance={() => {
+				loading = true;
+				return async ({ result }) => {
+					if (result.type === 'redirect') {
+						goto(result.location);
+						return;
+					} else {
+						await applyAction(result);
+					}
+					loading = false;
+				};
+			}}
+		>
+			{#if form?.error}
+				<span class="">{form.error}</span>
+			{/if}
+			<input name="email" value={form?.email ?? ''} placeholder="email" />
+			<input type="password" name="password" placeholder="password" />
+			<button>Sign in</button>
+			<a href="/signup">Sign up instead</a>
+			<button class="look-like-anchor" formaction="?/resetpassword">Reset password</button>
+		</form>
+	{/if}
 </div>
 
 <style>
@@ -33,5 +56,9 @@
 		gap: 1rem;
 		border: 2px solid black;
 		text-align: center;
+	}
+
+	a {
+		font-weight: bold;
 	}
 </style>
